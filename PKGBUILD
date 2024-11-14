@@ -62,7 +62,7 @@ package() {
 
 build(){
   cd \
-    "${srcdir}"/"${_name}"-"${pkgver}"
+    "${srcdir}"/"${_pkg}"-"${pkgver}"
   "${_py}" \
     setup.py \
       build
