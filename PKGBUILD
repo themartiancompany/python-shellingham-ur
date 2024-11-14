@@ -1,50 +1,84 @@
+# SPDX-License-Identifier: AGPL-3.0
+#
+# Maintainer: Truocolo <truocolo@aol.com>
+# Maintainer: Pellegrino Prevete (tallero) <pellegrinoprevete@gmail.com>
 # Maintainer: Clint Valentine <valentine.clint@gmail.com>
 
-_name=shellingham
-pkgbase='python-shellingham'
-pkgname=('python-shellingham' 'python2-shellingham')
+_py="python"
+_pyver="$( \
+  "${_py}" \
+    -V | \
+    awk \
+      '{print $2}')"
+_pymajver="${_pyver%.*}"
+_pyminver="${_pymajver#*.}"
+_pynextver="${_pymajver%.*}.$(( \
+  ${_pyminver} + 1))"
+_pkg=shellingham
+pkgbase="${_py}-${_pkg}"
+pkgname=(
+  "${_py}-${_pkg}"
+)
 pkgver=1.3.0
 pkgrel=1
-pkgdesc="Detect what shell the current Python executable is running in."
-arch=('any')
-url=https://github.com/sarugaku/"${_name}"
-license=('ISC')
+_pkgdesc=(
+  "Detect what shell the current"
+  "Python executable is running in."
+)
+pkgdesc="${_pkgdesc[*]}"
+arch=(
+  'any'
+)
+_http="https://github.com"
+_ns="sarugaku"
+url="${_http}/${_ns}/${_pkg}"
+license=(
+  'ISC'
+)
 makedepends=(
-  'python' 'python-setuptools'
-  'python2' 'python2-setuptools')
-options=(!emptydirs)
-source=("${pkgname}"-"${pkgver}".tar.gz::https://pypi.io/packages/source/"${_name:0:1}"/"${_name}"/"${_name}"-"${pkgver}".tar.gz)
-sha256sums=('a1bc8cbe437e5348c242d4e8145242d364d9493034ed790a82991c0e2d3ad984')
-
-prepare() {
-  cp -a "${_name}"-"${pkgver}"{,-py2}
-}
+  "${_py}>=${_pymajver}"
+  "${_py}<${_pynextver}"
+  "${_py}-setuptools"
+)
+options=(
+  !emptydirs
+)
+_pypi="https://pypi.io/packages/source"
+source=(
+  "${pkgname}-${pkgver}.tar.gz::${_pypi}/${_pkg:0:1}/${_pkg}/${_pkg}-${pkgver}.tar.gz")
+sha256sums=(
+  'a1bc8cbe437e5348c242d4e8145242d364d9493034ed790a82991c0e2d3ad984'
+)
 
 package() {
-  cd "${srcdir}"/"${_name}"-"${pkgver}"
-  python setup.py install --root="${pkgdir}/" --optimize=1
+  cd \
+    "${srcdir}/${_pkg}-${pkgver}"
+  "${_py}" \
+    setup.py \
+      install \
+        --root="${pkgdir}" \
+	--optimize=1
 }
 
 build(){
-  cd "${srcdir}"/"${_name}"-"${pkgver}"
-  python setup.py build
-
-  cd "${srcdir}"/"${_name}"-"${pkgver}"-py2
-  python2 setup.py build
-}
-
-package_python2-shellingham() {
-  depends=('python2')
-
-  cd "${_name}"-"${pkgver}"-py2
-  install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-  python2 setup.py install --root="${pkgdir}"/ --optimize=1 --skip-build
+  cd \
+    "${srcdir}"/"${_name}"-"${pkgver}"
+  "${_py}" \
+    setup.py \
+      build
 }
 
 package_python-shellingham() {
-  depends=('python')
-
-  cd "${_name}"-"${pkgver}"
-  install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
-  python setup.py install --root="${pkgdir}"/ --optimize=1 --skip-build
+  cd \
+    "${_pkg}-${pkgver}"
+  install \
+    -Dm644 \
+    LICENSE \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE" \
+  "${_py}" \
+    setup.py \
+      install \
+        --root="${pkgdir}" \
+	--optimize=1 \
+	--skip-build
 }
