@@ -68,17 +68,17 @@ build(){
       build
 }
 
-package_python-shellingham() {
-  cd \
-    "${_pkg}-${pkgver}"
-  install \
-    -Dm644 \
-    LICENSE \
-    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE" \
-  "${_py}" \
-    setup.py \
-      install \
-        --root="${pkgdir}" \
-	--optimize=1 \
-	--skip-build
-}
+# package_python-shellingham() {
+#   cd \
+#     "${_pkg}-${pkgver}"
+#   install \
+#     -Dm644 \
+#     LICENSE \
+#     "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE" \
+#   "${_py}" \
+#     setup.py \
+#       install \
+#         --root="${pkgdir}" \
+# 	--optimize=1 \
+# 	--skip-build
+# }
